@@ -1,0 +1,176 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Movie {
+    private String title;
+    private String genre;
+    private int durationMinutes;
+
+    public Movie(String title, String genre, int durationMinutes) {
+        this.title = title;
+        this.genre = genre;
+        this.durationMinutes = durationMinutes;
+    }
+
+    // Getters and setters...
+    
+    public String getTitle() {
+        return title;
+    }
+
+    @Override
+    public String toString() {
+        return "Title: " + title + ", Genre: " + genre + ", Duration: " + durationMinutes + " minutes";
+    }
+}
+
+class Theater {
+    private int theaterNumber;
+    private int totalSeats;
+    private List<Seat> seats;
+
+    public Theater(int theaterNumber, int totalSeats) {
+        this.theaterNumber = theaterNumber;
+        this.totalSeats = totalSeats;
+        this.seats = new ArrayList<>();
+        initializeSeats(totalSeats);
+    }
+
+    // Getters...
+    
+    public int getTheaterNumber() {
+        return theaterNumber;
+    }
+
+    private void initializeSeats(int totalSeats) {
+        for (int i = 1; i <= totalSeats; i++) {
+            seats.add(new Seat(i));
+        }
+    }
+
+    public boolean bookSeat(int seatNumber) {
+        Seat seat = findSeat(seatNumber);
+        if (seat != null && !seat.isBooked()) {
+            seat.book();
+            return true;
+        }
+        return false;
+    }
+
+    public List<Seat> getAvailableSeats() {
+        List<Seat> availableSeats = new ArrayList<>();
+        for (Seat seat : seats) {
+            if (!seat.isBooked()) {
+                availableSeats.add(seat);
+            }
+        }
+        return availableSeats;
+    }
+
+    private Seat findSeat(int seatNumber) {
+        for (Seat seat : seats) {
+            if (seat.getSeatNumber() == seatNumber) {
+                return seat;
+            }
+        }
+        return null;
+    }
+}
+
+class Seat {
+    private int seatNumber;
+    private boolean booked;
+
+    public Seat(int seatNumber) {
+        this.seatNumber = seatNumber;
+    }
+
+    public int getSeatNumber() {
+        return seatNumber;
+    }
+
+    public boolean isBooked() {
+        return booked;
+    }
+
+    public void book() {
+        booked = true;
+    }
+
+    public void unbook() {
+        booked = false;
+    }
+}
+
+class Booking {
+    private Movie movie;
+    private Theater theater;
+    private int seatNumber;
+
+    public Booking(Movie movie, Theater theater, int seatNumber) {
+        this.movie = movie;
+        this.theater = theater;
+        this.seatNumber = seatNumber;
+    }
+
+    public boolean makeBooking() {
+        return theater.bookSeat(seatNumber);
+    }
+
+    @Override
+    public String toString() {
+        return "Movie: " + movie.getTitle() + ", Theater: " + theater.getTheaterNumber() + ", Seat: " + seatNumber;
+    }
+}
+
+public class MovieTicketBookingSystem {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Create a movie
+        Movie movie = new Movie("The Matrix", "Sci-Fi", 150);
+
+        // Create a theater
+        Theater theater = new Theater(1, 50);
+
+        int choice;
+        do {
+            System.out.println("\nMovie Ticket Booking System Menu:");
+            System.out.println("1. View Available Seats");
+            System.out.println("2. Book a Seat");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    List<Seat> availableSeats = theater.getAvailableSeats();
+                    System.out.println("Available Seats:");
+                    for (Seat seat : availableSeats) {
+                        System.out.print(seat.getSeatNumber() + " ");
+                    }
+                    System.out.println();
+                    break;
+                case 2:
+                    System.out.print("Enter the seat number to book: ");
+                    int seatNumber = scanner.nextInt();
+                    Booking booking = new Booking(movie, theater, seatNumber);
+                    if (booking.makeBooking()) {
+                        System.out.println("Booking successful: " + booking);
+                    } else {
+                        System.out.println("Seat not available or invalid seat number.");
+                    }
+                    break;
+                case 3:
+                    System.out.println("Exiting the Movie Ticket Booking System.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
+            }
+        } while (choice != 3);
+
+        scanner.close();
+    }
+}

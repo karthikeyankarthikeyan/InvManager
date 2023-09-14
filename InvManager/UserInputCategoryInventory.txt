@@ -1,0 +1,86 @@
+import java.util.Scanner;
+
+class Category {
+    private int id;
+    private String categoryName;
+    private String subcategoryName;
+    private String subcategoryType;
+
+    public Category(int id, String categoryName, String subcategoryName, String subcategoryType) {
+        this.id = id;
+        this.categoryName = categoryName;
+        this.subcategoryName = subcategoryName;
+        this.subcategoryType = subcategoryType;
+    }
+
+    // Getters and setters for Category attributes...
+
+    @Override
+    public String toString() {
+        return "ID: " + id +
+               ", Category: " + categoryName +
+               ", Subcategory: " + subcategoryName +
+               ", Type: " + subcategoryType;
+    }
+}
+
+class Inventory extends Category {
+    private int quantity;
+    private double price;
+
+    public Inventory(int id, String categoryName, String subcategoryName, String subcategoryType,
+                     int quantity, double price) {
+        super(id, categoryName, subcategoryName, subcategoryType);
+        this.quantity = quantity;
+        this.price = price;
+    }
+
+    // Getters and setters for Inventory attributes...
+
+    @Override
+    public String toString() {
+        return super.toString() +
+               ", Quantity: " + quantity +
+               ", Price: " + price;
+    }
+}
+
+public class UserInputCategoryInventory {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Get user input for Category attributes
+        System.out.println("Enter Category Information:");
+        System.out.print("ID: ");
+        int categoryId = scanner.nextInt();
+        scanner.nextLine();  // Consume the newline
+        System.out.print("Category Name: ");
+        String categoryName = scanner.nextLine();
+        System.out.print("Subcategory Name: ");
+        String subcategoryName = scanner.nextLine();
+        System.out.print("Subcategory Type: ");
+        String subcategoryType = scanner.nextLine();
+
+        // Create a Category object using user input
+        Category category = new Category(categoryId, categoryName, subcategoryName, subcategoryType);
+
+        // Get user input for Inventory attributes
+        System.out.println("\nEnter Inventory Information:");
+        System.out.print("Quantity: ");
+        int quantity = scanner.nextInt();
+        System.out.print("Price: ");
+        double price = scanner.nextDouble();
+
+        // Create an Inventory object using user input
+        Inventory inventory = new Inventory(categoryId, categoryName, subcategoryName, subcategoryType, quantity, price);
+
+        // Display Category and Inventory information
+        System.out.println("\nCategory Information:");
+        System.out.println(category);
+
+        System.out.println("\nInventory Information:");
+        System.out.println(inventory);
+
+        scanner.close();
+    }
+}

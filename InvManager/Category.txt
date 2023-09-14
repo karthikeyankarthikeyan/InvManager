@@ -1,0 +1,184 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Category {
+    private int id;
+    private String categoryName;
+    private String subcategoryName;
+    private String subcategoryType;
+
+    public Category(int id, String categoryName, String subcategoryName, String subcategoryType) {
+        this.id = id;
+        this.categoryName = categoryName;
+        this.subcategoryName = subcategoryName;
+        this.subcategoryType = subcategoryType;
+    }
+     public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getSubcategoryName() {
+        return subcategoryName;
+    }
+
+    public void setSubcategoryName(String subcategoryName) {
+        this.subcategoryName = subcategoryName;
+    }
+
+    public String getSubcategoryType() {
+        return subcategoryType;
+    }
+
+    public void setSubcategoryType(String subcategoryType) {
+        this.subcategoryType = subcategoryType;
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + id +
+               ", Category: " + categoryName +
+               ", Subcategory: " + subcategoryName +
+               ", Type: " + subcategoryType;
+    }
+    
+}
+
+public class CategorySystem {
+    private static List<Category> categoryList = new ArrayList<>();
+    private static int nextCategoryId = 1;
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\nCategory Management System Menu:");
+            System.out.println("1. Add Category");
+            System.out.println("2. Delete Category");
+            System.out.println("3. Update Category");
+            System.out.println("4. List All Categories");
+            System.out.println("5. Search for Category");
+            System.out.println("6. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();  // Consume the newline character
+
+            switch (choice) {
+                case 1:
+                    addCategory(scanner);
+                    break;
+                case 2:
+                    deleteCategory(scanner);
+                    break;
+                case 3:
+                    updateCategory(scanner);
+                    break;
+                case 4:
+                    listAllCategories();
+                    break;
+                case 5:
+                    searchCategory(scanner);
+                    break;
+                case 6:
+                    System.out.println("Exiting the Category Management System.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
+            }
+        } while (choice != 6);
+
+        scanner.close();
+    }
+
+    private static void addCategory(Scanner scanner) {
+        System.out.print("Enter Category Name: ");
+        String categoryName = scanner.nextLine();
+
+        System.out.print("Enter Subcategory Name: ");
+        String subcategoryName = scanner.nextLine();
+
+        System.out.print("Enter Subcategory Type: ");
+        String subcategoryType = scanner.nextLine();
+
+        Category category = new Category(nextCategoryId++, categoryName, subcategoryName, subcategoryType);
+        categoryList.add(category);
+        System.out.println("Category added successfully.");
+    }
+
+    private static void deleteCategory(Scanner scanner) {
+        System.out.print("Enter the ID of the Category to delete: ");
+        int categoryId = scanner.nextInt();
+        scanner.nextLine();  // Consume the newline character
+
+        boolean removed = categoryList.removeIf(category -> category.getId() == categoryId);
+
+        if (removed) {
+            System.out.println("Category deleted successfully.");
+        } else {
+            System.out.println("Category not found.");
+        }
+    }
+
+    private static void updateCategory(Scanner scanner) {
+        System.out.print("Enter the ID of the Category to update: ");
+        int categoryId = scanner.nextInt();
+        scanner.nextLine();  // Consume the newline character
+
+        for (Category category : categoryList) {
+            if (category.getId() == categoryId) {
+                System.out.print("Enter new Category Name: ");
+                String newCategoryName = scanner.nextLine();
+                category.setCategoryName(newCategoryName);
+
+                System.out.print("Enter new Subcategory Name: ");
+                String newSubcategoryName = scanner.nextLine();
+                category.setSubcategoryName(newSubcategoryName);
+
+                System.out.print("Enter new Subcategory Type: ");
+                String newSubcategoryType = scanner.nextLine();
+                category.setSubcategoryType(newSubcategoryType);
+
+                System.out.println("Category updated successfully.");
+                return;
+            }
+        }
+
+        System.out.println("Category not found.");
+    }
+
+    private static void listAllCategories() {
+        System.out.println("All Categories:");
+        for (Category category : categoryList) {
+            System.out.println(category);
+        }
+    }
+
+    private static void searchCategory(Scanner scanner) {
+        System.out.print("Enter the Category Name to search for: ");
+        String categoryName = scanner.nextLine();
+
+        for (Category category : categoryList) {
+            if (category.getCategoryName().equalsIgnoreCase(categoryName)) {
+                System.out.println("Category found: " + category);
+                return;
+            }
+        }
+
+        System.out.println("Category not found.");
+    }
+}
+
