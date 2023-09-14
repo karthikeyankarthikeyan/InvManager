@@ -1,0 +1,136 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Booking{
+    private int bookingId;
+    private String customerName;
+    private String bookedItem;
+    private double totalCost;
+    private boolean isPaid;
+    
+    public Booking(int bookingId, String customerName, String bookedItem, double totalCost){
+        this.bookingId= bookingId;
+        this.customerName=customerName;
+        this.bookedItem=bookedItem;
+        this.totalCost=totalCost;
+        this.isPaid=isPaid;
+    }
+    public int getBookingId(){
+        return bookingId;
+    }
+    public String getCustomerName(){
+        return customerName;
+    }
+    public String getBookedItem()
+    {
+        return bookedItem;
+    }
+    public double getTotalCost(){
+        return totalCost;
+    }
+    public boolean isPaid(){
+        return isPaid;
+    }
+    public void markAsPaid(){
+        isPaid=true;
+    }
+    @Override
+    public String toString(){
+    String paymentStatus = isPaid? " Paid" :"not paid";
+    return "Booking ID: " + bookingId + ", Customer Name: " + customerName + ", Booked Item: " + bookedItem +
+                ", Total Cost: $" + totalCost + ", Payment Status: " + paymentStatus;
+    }
+}
+
+class BookingSystem{
+    public List<Booking> bookings;
+    
+    public BookingSystem(){
+        this.bookings=new ArrayList<>();
+    }
+    
+    public void makeBooking(int bookingId, String customerName, String bookedItem, double totalCost) {
+    Booking booking = new Booking(bookingId, customerName, bookedItem, totalCost);
+    bookings.add(booking);
+    }
+
+    public List<Booking> getAllBookings() {
+        return bookings;
+    }
+    
+    public void makePayment(int bookingId) {
+        for (Booking booking : bookings) {
+            if (booking.getBookingId() == bookingId && !booking.isPaid()) {
+                booking.markAsPaid();
+                System.out.println("Payment for Booking ID: " + bookingId + " is successful!\n");
+                return;
+            }
+        }
+        System.out.println("Payment failed. Booking not found or already paid.\n");
+    }
+}
+
+public class SimpleBookingSystem{
+    public static void main(String args[]){
+        BookingSystem bookingSystem = new BookingSystem();
+        Scanner sc = new Scanner(System.in);
+        int choice;
+        
+        do{
+            System.out.println("Booking System with Payment");
+            System.out.println("1. Make a Booking");
+            System.out.println("2. View All Bookings");
+            System.out.println("3. Make Payment");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            
+        switch(choice){
+            case 1: makeBooking(sc);
+            break;
+            case 2: getAllBookings();
+            break;
+            case 3: makePayment(sc);
+            break;
+            case 4:
+                System.out.println("exit");
+        }
+        }
+        while(choice!=4);
+        sc.close();
+    }
+    
+public static void  makeBooking(Scanner sc){
+                System.out.print("Enter booking ID: ");
+                String bookingId = sc.nextLine();
+                System.out.print("Enter customer name: ");
+                String customerName = sc.nextLine();
+                System.out.print("Enter booked item: ");
+                String bookedItem = sc.nextLine();
+                System.out.print("Enter total cost: ");
+                double totalCost = Double.parseDouble(sc.nextLine());
+
+                bookingSystem.makeBooking(bookingId, customerName, bookedItem, totalCost);
+                System.out.println("Booking successful!\n");
+    
+}
+
+public static void getAllBookings(){
+     List<Booking> allBookings = bookingSystem.getAllBookings();
+                if (allBookings.isEmpty()) {
+                    System.out.println("No bookings available.\n");
+                } else {
+                    System.out.println("All Bookings:");
+                    for (Booking booking : allBookings) {
+                        System.out.println(booking);
+                    }
+                    System.out.println();
+}
+}
+public static void makePayment(Scanner sc){
+    System.out.print("Enter booking ID for payment: ");
+                String bookingId = sc.nextLine();
+                bookingSystem.makePayment(bookingId);
+}
+
+}
